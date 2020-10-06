@@ -18,6 +18,17 @@ from matplotlib import style
 import warnings
 warnings.filterwarnings('ignore')
 
+import argparse
+
+parser = argparse.ArgumentParser("python file.py AAL")
+parser.add_argument("querystock", help="An stock to be queried.", type=str)
+args = parser.parse_args()
+querystock=args.querystock
+
+#yahoo finance API
+#import yfinance
+# a = yfinance.download(tickers="AAL",period="5d",interval="1m")
+
 
 # In[16]:
 
@@ -28,12 +39,12 @@ style.use('ggplot')
 # get 2014-2018 data to train our model
 start = datetime.datetime(2016,1,1)
 end = datetime.datetime(2019,12,30)
-df = web.DataReader("M", 'yahoo', start, end) 
+df = web.DataReader(querystock, 'yahoo', start, end) 
 
 # get 2019 data to test our model on 
 start = datetime.datetime(2020,1,1)
 end = datetime.date.today()
-test_df = web.DataReader("M", 'yahoo', start, end) 
+test_df = web.DataReader(querystock, 'yahoo', start, end) 
 
 
 # In[17]:
@@ -74,7 +85,7 @@ close_px = df['Adj Close']
 mavg = close_px.rolling(window=100).mean()
 
 plt.figure(figsize = (12,6))
-close_px.plot(label='Target')
+close_px.plot(label='Stock '+querystock)
 mavg.plot(label='mavg')
 plt.xlabel('Date')
 plt.ylabel('Price')
